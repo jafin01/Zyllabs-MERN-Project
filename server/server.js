@@ -19,7 +19,7 @@ app.use('/api/school', require('./routes/schoolRouter'));
 app.use(errorHandler)
 
 // Connecting DB and listening to PORT
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 connectToDB(() => {
   app.listen(PORT, () => console.log(`listening to PORT ${PORT}`));
