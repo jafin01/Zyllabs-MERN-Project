@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const { findSchool, registerSchool } = require("../helpers/schoolHelpers");
 
 // @desc school signup
@@ -28,7 +28,7 @@ const signup = asyncHandler(async (req, res) => {
 
   // Check if school exists
   try {
-    const school = await findSchool(schoolKey);
+    const school = await findSchool(email);
     if (school) {
       throw new Error("School already exists");
     }
@@ -47,9 +47,40 @@ const signup = asyncHandler(async (req, res) => {
 });
 
 const createToken = (schoolId) => {
-  return jwt.sign({schoolId}, process.env.SECRET, { expiresIn: "30d" });
+  return jwt.sign({ schoolId }, process.env.SECRET, { expiresIn: "30d" });
 };
+
+// @desc school login
+// @route /api/school/login
+// @access public
+const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  // Validating all fields
+  if (!email || !password) {
+    throw new Error("Please fill all fields");
+  }
+
+  // Check for school email
+  try {
+    const school = await findSchool(email);
+    if (!school) {
+      throw new Error("School not found");
+    }
+
+    // Authenticating school
+    if (school && (await bcrypt.compare(password, school.password))) {
+      res.status(200).json({ school, token: createToken(school._id) });
+    } else {
+      throw new Error("Invalid Credentials");
+    }
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+});
 
 module.exports = {
   signup,
+  login,
 };

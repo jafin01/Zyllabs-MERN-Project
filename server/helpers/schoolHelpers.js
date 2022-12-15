@@ -1,10 +1,10 @@
 const School = require("../model/schoolModel");
 
 // Find one school
-const findSchool = (id) => {
+const findSchool = (email) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const school = await School.findOne({ schoolKey: id });
+      const school = await School.findOne({ email });
       resolve(school);
     } catch (error) {
       reject(error);
