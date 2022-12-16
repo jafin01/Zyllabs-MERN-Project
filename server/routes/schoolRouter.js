@@ -1,15 +1,20 @@
 const express = require("express");
-const { signup, login, getStaffs } = require("../controller/schoolController");
-const protect = require("../middleware/authMiddleware");
+const {
+  signup,
+  login,
+  getStaffs,
+  addStaff,
+} = require("../controller/schoolController");
+const { protectSchool } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 router.post("/signup", signup);
 
-router.post('/login', login);
+router.post("/login", login);
 
-router.get('/staffs',protect, getStaffs);
+router.get("/staffs", protectSchool, getStaffs);
 
-// router.post('/staffs/add-staff', addStaff);
+router.post("/staffs/add-staff", protectSchool, addStaff);
 
 module.exports = router;

@@ -7,7 +7,7 @@ const staffSchema = new Schema({
     type: String,
     required: true,
   },
-  schoolName: {
+  schoolId: {
     type: String,
     required: true,
   },
@@ -17,7 +17,7 @@ const staffSchema = new Schema({
     unique: true,
   },
   contact: {
-    type: String,
+    type: Number,
     required: true,
   },
   allocatedClasses: [String],

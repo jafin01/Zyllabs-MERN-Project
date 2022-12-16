@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const schoolSchema = new Schema(
   {
-    schoolKey: {
+    schoolId: {
       type: String,
       required: true,
       unique: true,

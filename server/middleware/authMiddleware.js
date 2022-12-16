@@ -1,8 +1,10 @@
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const School = require("../model/schoolModel");
+const Staff = require("../model/staffModel");
 
-const protect = asyncHandler(async (req, res, next) => {
+// Authorize school
+const protectSchool = asyncHandler(async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -10,7 +12,7 @@ const protect = asyncHandler(async (req, res, next) => {
   ) {
     try {
       // Get token from header
-      token = req.headers.authorization.split(' ')[1];
+      token = req.headers.authorization.split(" ")[1];
 
       // Verify token
       const decoded = jwt.verify(token, process.env.SECRET);
@@ -19,17 +21,48 @@ const protect = asyncHandler(async (req, res, next) => {
       req.school = await School.findById(decoded.id).select("-password");
 
       next();
-    } catch(error) {
+    } catch (error) {
       console.log(error);
       res.status(401);
-      throw new Error('Not Authorized');
+      throw new Error("Not Authorized");
     }
   }
 
-  if(!token) {
-    res.status(401)
-    throw new Error('Not Authorized, No token');
+  if (!token) {
+    res.status(401);
+    throw new Error("Not Authorized, No token");
   }
 });
 
-module.exports = protect;
+// Authorize staff
+const protectStaff = asyncHandler(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      // Get token from header
+      token = req.headers.authorization.split(" ")[1];
+
+      // Verify token
+      const decoded = jwt.verify(token, process.env.SECRET);
+
+      // Get school from token
+      req.staff = await Staff.findById(decoded.id).select("-password");
+
+      next();
+    } catch (error) {
+      console.log(error);
+      res.status(401);
+      throw new Error("Not Authorized");
+    }
+  }
+
+  if (!token) {
+    res.status(401);
+    throw new Error("Not Authorized, No token");
+  }
+});
+
+module.exports = { protectSchool, protectStaff };
