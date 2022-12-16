@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { findSchool, registerSchool } = require("../helpers/schoolHelpers");
+const { findSchool, registerSchool, getAllStaffs } = require("../helpers/schoolHelpers");
 
 // @desc school signup
 // @route POST /api/school/signup
@@ -68,6 +68,11 @@ const login = asyncHandler(async (req, res) => {
       throw new Error("School not found");
     }
 
+    // Check blockStatus
+    if (school.blockStatus) {
+      throw new Error("School Blocked by Admin");
+    }
+
     // Authenticating school
     if (school && (await bcrypt.compare(password, school.password))) {
       res.status(200).json({ school, token: createToken(school._id) });
@@ -80,7 +85,25 @@ const login = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc get all staff details
+// @route GET /api/school/staffs
+// @access private
+const getStaffs = asyncHandler(async (req, res) => {
+  try{
+    const staffData = await getAllStaffs();
+    if(!staffData.length){
+      throw new Error('No staffs found');
+    }
+
+    res.status(200).json(staffData);
+  }catch(error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+})
+
 module.exports = {
   signup,
   login,
+  getStaffs
 };

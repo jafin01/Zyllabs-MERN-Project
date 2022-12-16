@@ -1,4 +1,5 @@
 const School = require("../model/schoolModel");
+const Staffs = require('../model/staffModel');
 
 // Find one school
 const findSchool = (email) => {
@@ -27,7 +28,20 @@ const registerSchool = (schoolData, hashedPassword) => {
   });
 };
 
+// Get details of all staffs
+const getAllStaffs = (schoolName) => {
+  return new Promise(async(resolve, reject) => {
+    try{
+      const staffs = await Staffs.find({ schoolName })
+      resolve(staffs);
+    }catch(error) {
+      reject(error);
+    }
+  })
+}
+
 module.exports = {
   findSchool,
   registerSchool,
+  getAllStaffs,
 };
