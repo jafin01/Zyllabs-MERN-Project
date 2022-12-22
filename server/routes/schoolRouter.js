@@ -4,6 +4,8 @@ const {
   login,
   getStaffs,
   addStaff,
+  updateStaff,
+  deleteStaff,
 } = require("../controller/schoolController");
 const { protectSchool } = require("../middleware/authMiddleware");
 
@@ -16,5 +18,10 @@ router.post("/login", login);
 router.get("/staffs", protectSchool, getStaffs);
 
 router.post("/staffs/add-staff", protectSchool, addStaff);
+
+router
+  .route("/staffs/:id")
+  .patch(protectSchool, updateStaff)
+  .delete(protectSchool, deleteStaff);
 
 module.exports = router;

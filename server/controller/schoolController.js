@@ -7,7 +7,10 @@ const {
   getAllStaffs,
   createStaff,
   findStaff,
+  updateOneStaff,
+  deleteOneStaff,
 } = require("../helpers/schoolHelpers");
+const { ObjectId } = require("bson");
 
 // @desc school signup
 // @route POST /api/school/signup
@@ -46,7 +49,7 @@ const signup = asyncHandler(async (req, res) => {
 
     // Create School
     const newSchool = await registerSchool(schoolData, hashedPassword);
-    res.status(201).json({ newSchool, token: createToken(newSchool._id) });
+    res.status(201).json({ newSchool });
   } catch (error) {
     const statusCode = res.statusCode ? res.statusCode : 400;
     res.status(statusCode);
@@ -145,12 +148,53 @@ const addStaff = asyncHandler(async (req, res) => {
       newStaff,
       hashedPassword
     );
-    res
-      .status(200)
-      .json({ createdStaff, token: createToken(createdStaff._id) });
+
+    res.status(200).json({ createdStaff });
   } catch (error) {
     const statusCode = res.statusCode ? res.statusCode : 400;
     res.status(statusCode);
+    throw new Error(error.message);
+  }
+});
+
+// @desc Update a staff
+// @route PATCH /api/school/staffs/:id
+// @access Private
+const updateStaff = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+
+  // Check if ObjectId is invalid
+  if (!ObjectId.isValid(id)) {
+    res.status(400);
+    throw new Error("Invalid ObjectId");
+  }
+
+  // Update staff
+  try {
+    const updatedStaff = await updateOneStaff(req.body, id);
+    res.status(200).json(updatedStaff);
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+});
+
+// @desc Delete a Staff
+// @route DELETE /api/school/staffs/:id
+// @access Private
+const deleteStaff = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+
+  // Check if ObjectId is invalid
+  if(!ObjectId.isValid(id)) {
+    throw new Error('ObjectId is invalid');
+  }
+
+  // Delete Staff
+  try {
+    const deletedStaff = await deleteOneStaff(id);
+    res.status(200).json(deletedStaff);
+  } catch (error) {
     throw new Error(error.message);
   }
 });
@@ -165,4 +209,6 @@ module.exports = {
   login,
   getStaffs,
   addStaff,
+  updateStaff,
+  deleteStaff,
 };

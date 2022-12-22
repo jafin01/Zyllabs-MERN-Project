@@ -1,3 +1,4 @@
+const { ObjectId } = require("bson");
 const School = require("../model/schoolModel");
 const Staff = require("../model/staffModel");
 
@@ -59,9 +60,33 @@ const createStaff = (schoolId, newStaff, hashedPassword) => {
       const createdStaff = await Staff.create({
         schoolId,
         ...newStaff,
-        hashedPassword,
+        password : hashedPassword,
       });
       resolve(createdStaff);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// Update staff
+const updateOneStaff = (updatedStaff, id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const newStaff = Staff.findByIdAndUpdate({ _id: id }, {...updatedStaff});
+      resolve(newStaff);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// Delete staff
+const deleteOneStaff = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const deletedStaff = Staff.findByIdAndDelete({ _id: id });
+      resolve(deletedStaff);
     } catch (error) {
       reject(error);
     }
@@ -74,4 +99,6 @@ module.exports = {
   getAllStaffs,
   findStaff,
   createStaff,
+  updateOneStaff,
+  deleteOneStaff,
 };
