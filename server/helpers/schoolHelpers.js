@@ -12,6 +12,18 @@ const findSchool = (email) => {
   });
 };
 
+// Find school by schoolId
+const findSchoolBySchoolId = (schoolId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const school = await School.findOne({ schoolId });
+      resolve(school);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 // Register school
 const registerSchool = (schoolData, hashedPassword) => {
   return new Promise(async (resolve, reject) => {
@@ -29,5 +41,6 @@ const registerSchool = (schoolData, hashedPassword) => {
 
 module.exports = {
   findSchool,
+  findSchoolBySchoolId,
   registerSchool,
 };

@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { ObjectId } = require("bson");
 
 const {
@@ -9,6 +10,7 @@ const {
   updateOneStaff,
   deleteOneStaff,
 } = require("../helpers/staffHelpers");
+const { findSchoolById } = require("../helpers/schoolHelpers");
 
 // @desc get all staff details
 // @route GET /api/school/staffs
@@ -33,7 +35,7 @@ const getStaffs = asyncHandler(async (req, res) => {
 const addStaff = asyncHandler(async (req, res) => {
   const newStaff = req.body;
 
-  const { name, email, contact, allocatedClasses, subjects, headOf, password } =
+  const { name, email, contact, allocatedClasses, subjects, password } =
     newStaff;
 
   // Validating fields
@@ -117,9 +119,49 @@ const deleteStaff = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc staff login
+// @route POST /api/staff/login
+// @access Public
+const staffLogin = asyncHandler(async (req, res) => {
+  const { schoolId, email, password } = req.body;
+  try {
+    // check if school exists
+    const school = await findSchoolById(schoolId);
+    if (!school) {
+      res.status(400);
+      throw new Error("School not found");
+    }
+
+    // check for staff email
+    const staff = await findStaff(schoolId, email);
+    if (!staff) {
+      res.status(400);
+      throw new Error("Staff not found");
+    }
+
+    // check for blockStatus
+    if (staff.blockStatus) {
+      res.status(403);
+      throw new Error("Staff blocked by school");
+    }
+
+    // Authenticating staff
+    if (staff && bcrypt.compare(password, staff.password))
+      res.status(200).json({ staff, token: createToken(staff._id) });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+});
+
+// Create Token jwt
+const createToken = (id) => {
+  return jwt.sign({ id }, process.env.SECRET, { expiresIn: "30d" });
+};
+
 module.exports = {
   getStaffs,
   addStaff,
   updateStaff,
   deleteStaff,
+  staffLogin,
 };

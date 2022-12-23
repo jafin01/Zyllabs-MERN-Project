@@ -14,6 +14,8 @@ app.use(logger);
 
 // Routes
 app.use("/api/school", require("./routes/schoolRouter"));
+app.use("/api/staff", require("./routes/staffRouter"));
+app.use("/api/student", require('./routes/studentRouter'))
 
 // Error Handling
 app.use(errorHandler);
