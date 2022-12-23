@@ -5,6 +5,7 @@ const {
   findOneStudent,
   createStudent,
   findStudentByEmail,
+  deleteOneStudent,
 } = require("../helpers/studentHelpers");
 const { transporter, mailOptions } = require("../config/nodemailer");
 const { findSchoolBySchoolId } = require("../helpers/schoolHelpers");
@@ -73,8 +74,13 @@ const addStudent = asyncHandler(async (req, res) => {
 // @route POST /api/school/students/:id
 // @access Private
 const deleteStudent = asyncHandler(async (req, res) => {
-  
-})
+  try {
+    const deletedStudent = await deleteOneStudent(req.params.id);
+    res.status(200).json(deletedStudent);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+});
 
 // @desc student login
 // @route POST /api/student/login
@@ -102,7 +108,7 @@ const studentLogin = asyncHandler(async (req, res) => {
       res.status(200).json({ student, token: createToken(student._id) });
     } else {
       res.status(401);
-      throw new Error('Invalid Credential')
+      throw new Error("Invalid Credential");
     }
   } catch (error) {
     throw new Error(error.message);
@@ -116,4 +122,5 @@ const createToken = (id) => {
 module.exports = {
   addStudent,
   studentLogin,
+  deleteStudent,
 };

@@ -40,8 +40,21 @@ const createStudent = (school, student, password) => {
   });
 };
 
+// Delete a student
+const deleteOneStudent = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const deletedStudent = await Student.findByIdAndDelete({_id : id});
+      resolve(deletedStudent)
+    } catch(error) {
+      reject(error);
+    }
+  })
+}
+
 module.exports = {
   findOneStudent,
   findStudentByEmail,
   createStudent,
+  deleteOneStudent,
 };

@@ -1,6 +1,9 @@
 const express = require("express");
 const { signup, login } = require("../controller/schoolController");
-const { addStudent } = require("../controller/studentController");
+const {
+  addStudent,
+  deleteStudent,
+} = require("../controller/studentController");
 const {
   getStaffs,
   addStaff,
