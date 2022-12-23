@@ -69,6 +69,13 @@ const addStudent = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc delete a student
+// @route POST /api/school/students/:id
+// @access Private
+const deleteStudent = asyncHandler(async (req, res) => {
+  
+})
+
 // @desc student login
 // @route POST /api/student/login
 // @access Public
@@ -93,6 +100,9 @@ const studentLogin = asyncHandler(async (req, res) => {
     // Authenticate student
     if (student && (await bcrypt.compare(password, student.password))) {
       res.status(200).json({ student, token: createToken(student._id) });
+    } else {
+      res.status(401);
+      throw new Error('Invalid Credential')
     }
   } catch (error) {
     throw new Error(error.message);

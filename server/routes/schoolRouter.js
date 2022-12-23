@@ -26,4 +26,6 @@ router
 
 router.post("/students/add-student", protectSchool, addStudent);
 
+router.delete("/students/:id", protectSchool, deleteStudent);
+
 module.exports = router;
