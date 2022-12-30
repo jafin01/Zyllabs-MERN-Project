@@ -292,7 +292,11 @@ function Form() {
                   color="#3366CC"
                   variant="body2"
                   sx={{
-                    cursor: 'pointer',
+                    color: '#3366CC',
+                    '&:hover': {
+                      color: '#F3DEC9',
+                      cursor: 'pointer',
+                    },
                   }}
                 >
                   Forgot password?
@@ -303,13 +307,16 @@ function Form() {
                 {isLogin && 'Sign in'}
                 {isRegister && 'Signu up'}
               </Button>
-              <Grid container justifyContent="flex-end">
+              <Grid container justifyContent="center">
                 <Grid item>
                   <Typography
                     variant="body2"
                     sx={{
                       color: '#3366CC',
-                      cursor: 'pointer',
+                      '&:hover': {
+                        color: '#F3DEC9',
+                        cursor: 'pointer',
+                      },
                     }}
                     onClick={() => {
                       setPageType((prev) => (prev === 'login' ? 'register' : 'login'));
@@ -321,28 +328,6 @@ function Form() {
                   </Typography>
                 </Grid>
               </Grid>
-
-              {/* <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Sign Up
-              </Button>
-              <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      mr: '0',
-                      color: '#3366CC',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => {
-                      setPageType('login');
-                      resetForm();
-                    }}
-                  >
-                    Already have an account? Sign In
-                  </Typography>
-                </Grid>
-              </Grid> */}
             </Box>
           </form>
         )}
