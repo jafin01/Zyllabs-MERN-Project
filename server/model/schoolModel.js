@@ -7,11 +7,11 @@ const schoolSchema = new Schema(
     schoolId: {
       type: String,
       required: true,
-      unique: true,
     },
     name: {
       type: String,
       required: true,
+      uppercase: true,
     },
     head: {
       type: String,

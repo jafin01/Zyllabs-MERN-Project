@@ -11,7 +11,9 @@ import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import {
-  IconButton, InputAdornment, InputLabel, MenuItem, Select,
+  IconButton,
+  InputAdornment,
+  MenuItem,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { authActions } from '../../store/authSlice';
@@ -90,8 +92,23 @@ function Form() {
     }
   };
 
+  const register = async (values, onSubmitProps) => {
+    const registeredResponse = await fetch(`${serverBaseUrl}/api/school/signup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(values),
+    });
+
+    console.log(registeredResponse);
+    const registered = await registeredResponse.json();
+    onSubmitProps.resetForm();
+
+    console.log(registered);
+  };
+
   const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) await login(values, onSubmitProps);
+    if (isRegister) await register(values, onSubmitProps);
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -135,13 +152,13 @@ function Form() {
               <>
                 <TextField
                   margin="normal"
+                  autoFocus
                   required
                   fullWidth
                   id="schoolId"
                   label="School ID"
                   name="schoolId"
                   autoComplete="schoolId"
-                  autoFocus
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.schoolId}
@@ -156,7 +173,6 @@ function Form() {
                   label="School name"
                   name="name"
                   autoComplete="name"
-                  autoFocus
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.name}
@@ -171,22 +187,6 @@ function Form() {
                   label="School Head"
                   name="head"
                   autoComplete="head"
-                  autoFocus
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.head}
-                  error={Boolean(touched.head) && Boolean(errors.head)}
-                  helperText={touched.head && errors.head}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="head"
-                  label="School Head"
-                  name="head"
-                  autoComplete="head"
-                  autoFocus
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.head}
@@ -201,7 +201,6 @@ function Form() {
                   label="Place"
                   name="place"
                   autoComplete="place"
-                  autoFocus
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.place}
@@ -216,36 +215,42 @@ function Form() {
                   label="School Mob"
                   name="contact"
                   autoComplete="contact"
-                  autoFocus
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.contact}
                   error={Boolean(touched.contact) && Boolean(errors.contact)}
                   helperText={touched.contact && errors.contact}
                 />
-                <InputLabel id="demo-simple-select-label">Age</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={values.contact}
-                  label="Age"
+                <TextField
+                  select
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="category"
+                  label="Education Board"
+                  name="category"
+                  defaultValue=""
+                  autoComplete="category"
+                  onBlur={handleBlur}
                   onChange={handleChange}
+                  value={values.category}
+                  error={Boolean(touched.category) && Boolean(errors.category)}
+                  helperText={touched.category && errors.category}
                 >
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
+                  <MenuItem value="CBSE">CBSE</MenuItem>
+                  <MenuItem value="ICSE">ICSE</MenuItem>
+                </TextField>
               </>
               )}
               <TextField
                 margin="normal"
                 required
                 fullWidth
+                autoFocus
                 id="email"
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                autoFocus
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.email}
@@ -281,24 +286,37 @@ function Form() {
                   ),
                 }}
               />
+              <Grid container justifyContent="flex-end">
+                {isLogin && (
+                <Typography
+                  color="#3366CC"
+                  variant="body2"
+                  sx={{
+                    color: '#3366CC',
+                    '&:hover': {
+                      color: '#F3DEC9',
+                      cursor: 'pointer',
+                    },
+                  }}
+                >
+                  Forgot password?
+                </Typography>
+                )}
+              </Grid>
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 {isLogin && 'Sign in'}
                 {isRegister && 'Signu up'}
               </Button>
-              <Grid container>
-                {isLogin && (
-                <Grid item xs>
-                  <Typography color="#3366CC" variant="body2">
-                    Forgot password?
-                  </Typography>
-                </Grid>
-                )}
+              <Grid container justifyContent="center">
                 <Grid item>
                   <Typography
                     variant="body2"
                     sx={{
                       color: '#3366CC',
-                      cursor: 'pointer',
+                      '&:hover': {
+                        color: '#F3DEC9',
+                        cursor: 'pointer',
+                      },
                     }}
                     onClick={() => {
                       setPageType((prev) => (prev === 'login' ? 'register' : 'login'));
@@ -310,28 +328,6 @@ function Form() {
                   </Typography>
                 </Grid>
               </Grid>
-
-              {/* <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Sign Up
-              </Button>
-              <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      mr: '0',
-                      color: '#3366CC',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => {
-                      setPageType('login');
-                      resetForm();
-                    }}
-                  >
-                    Already have an account? Sign In
-                  </Typography>
-                </Grid>
-              </Grid> */}
             </Box>
           </form>
         )}
