@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <CssBaseline />
       <Routes>
-        <Route path="/auth/school" element={<AuthPage state="login" />} />
+        <Route path="/school/auth" element={<AuthPage state="login" />} />
       </Routes>
     </BrowserRouter>
   );
