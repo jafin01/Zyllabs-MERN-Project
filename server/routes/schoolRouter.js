@@ -1,6 +1,9 @@
 const express = require("express");
 const { signup, login } = require("../controller/schoolController");
-const { addStudent } = require("../controller/studentController");
+const {
+  addStudent,
+  deleteStudent,
+} = require("../controller/studentController");
 const {
   getStaffs,
   addStaff,
@@ -25,5 +28,7 @@ router
   .delete(protectSchool, deleteStaff);
 
 router.post("/students/add-student", protectSchool, addStudent);
+
+router.delete("/students/:id", protectSchool, deleteStudent);
 
 module.exports = router;

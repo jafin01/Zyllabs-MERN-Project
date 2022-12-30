@@ -6,45 +6,46 @@ const Schema = mongoose.Schema;
 const studentSchema = new Schema({
   name: {
     type: String,
-    // required: true,
+    required: true,
   },
   admnNo: {
     type: Number,
-    // required: true,
+    required: true,
   },
   email: {
     type: String,
-    // required: true,
+    required: true,
   },
   school: {
     type: ObjectId,
-    // required: true,
+    required: true,
   },
   class: {
     type: Number,
     min: 1,
     max: 12,
-    // required: true,
+    required: true,
   },
   div: {
     type: String,
-    // required: true,
+    required: true,
   },
   dob: {
     type: Date,
-    // required: true,
+    required: true,
   },
   address: {
     type: String,
-    // required: false,
+    required: false,
   },
   blockStatus: {
     type: Boolean,
-    // required: false,
+    default: false,
+    required: false,
   },
   password : {
     type : String,
-    // required : false
+    required : false
   }
 });
 

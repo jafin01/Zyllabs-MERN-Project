@@ -1,7 +1,14 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
-const { findOneStudent, createStudent } = require("../helpers/studentHelpers");
+const jwt = require("jsonwebtoken");
+const {
+  findOneStudent,
+  createStudent,
+  findStudentByEmail,
+  deleteOneStudent,
+} = require("../helpers/studentHelpers");
 const { transporter, mailOptions } = require("../config/nodemailer");
+const { findSchoolBySchoolId } = require("../helpers/schoolHelpers");
 
 // @desc Add a student
 // @route POST /api/school/students/add-student
@@ -37,6 +44,7 @@ const addStudent = asyncHandler(async (req, res) => {
     <p>
       You are now eligible for our service at your school. Your login credentials are as follows:
     </p>
+    <p style="color: red">schoolId: ${req.school.schoolId}</p>
     <p style="color: red">username: ${student.email}</p>
     <p style="color: red">password: ${password}</p>
     <p>
@@ -49,7 +57,8 @@ const addStudent = asyncHandler(async (req, res) => {
     <p>School Head: ${req.school.head}</p>`;
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log(error);
+        res.status(400);
+        throw new Error(error.message);
       } else {
         console.log("Email sent: " + info.response);
       }
@@ -61,6 +70,57 @@ const addStudent = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc delete a student
+// @route POST /api/school/students/:id
+// @access Private
+const deleteStudent = asyncHandler(async (req, res) => {
+  try {
+    const deletedStudent = await deleteOneStudent(req.params.id);
+    res.status(200).json(deletedStudent);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+});
+
+// @desc student login
+// @route POST /api/student/login
+// @access Public
+const studentLogin = asyncHandler(async (req, res) => {
+  const { schoolId, email, password } = req.body;
+
+  try {
+    // check for school
+    const school = await findSchoolBySchoolId(schoolId);
+    if (!school) {
+      res.status(400);
+      throw new Error("School not found");
+    }
+
+    // Check for student email
+    const student = await findStudentByEmail(school._id, email);
+    if (!student) {
+      res.status(400);
+      throw new Error("Student not found");
+    }
+
+    // Authenticate student
+    if (student && (await bcrypt.compare(password, student.password))) {
+      res.status(200).json({ student, token: createToken(student._id) });
+    } else {
+      res.status(401);
+      throw new Error("Invalid Credential");
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+});
+
+const createToken = (id) => {
+  return jwt.sign({ id }, process.env.SECRET, { expiresIn: "30d" });
+};
+
 module.exports = {
   addStudent,
+  studentLogin,
+  deleteStudent,
 };
