@@ -20,6 +20,7 @@ export const colorTokens = {
   primary: {
     50: '#E6FBFF',
     100: '#CCF7FE',
+    // 100: '#0E0B16',
     200: '#99EEFD',
     300: '#66E6FC',
     400: '#33DDFB',

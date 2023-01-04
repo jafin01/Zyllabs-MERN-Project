@@ -18,7 +18,7 @@ const staffSlice = createSlice({
         state.mode = state.mode === 'light' ? 'dark' : 'light';
       }
     },
-    setLogin: (state, action) => {
+    setStaffLogin: (state, action) => {
       state.staff = action.payload.staff;
     },
   },
