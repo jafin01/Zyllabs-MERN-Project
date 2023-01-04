@@ -10,7 +10,7 @@ const {
   updateOneStaff,
   deleteOneStaff,
 } = require("../helpers/staffHelpers");
-const { findSchoolById } = require("../helpers/schoolHelpers");
+const { findSchoolBySchoolId } = require("../helpers/schoolHelpers");
 
 // @desc get all staff details
 // @route GET /api/school/staffs
@@ -126,7 +126,7 @@ const staffLogin = asyncHandler(async (req, res) => {
   const { schoolId, email, password } = req.body;
   try {
     // check if school exists
-    const school = await findSchoolById(schoolId);
+    const school = await findSchoolBySchoolId(schoolId);
     if (!school) {
       res.status(400);
       throw new Error("School not found");

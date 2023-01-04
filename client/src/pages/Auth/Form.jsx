@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -6,109 +8,64 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import * as yup from 'yup';
 import { Formik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
 import {
   IconButton,
   InputAdornment,
   MenuItem,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { authActions } from '../../store/authSlice';
+import { useDispatch } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+import { memberLoginSchema, initialValuesMemberLogin } from '../../schema/memberSchema';
+import {
+  schoolLoginSchema,
+  registerSchema,
+  initialValuesSchoolLogin,
+  initialValuesRegister,
+} from '../../schema/schoolSchema';
+import login from '../../service/login';
+import register from '../../service/register';
+import { schoolActions } from '../../store/schoolSlice';
 
-const initialValuesLogin = {
-  email: '',
-  password: '',
-};
-
-const initialValuesRegister = {
-  schoolId: '',
-  name: '',
-  head: '',
-  place: '',
-  contact: '',
-  category: '',
-  email: '',
-  password: '',
-};
-
-const loginSchema = yup.object().shape({
-  email: yup.string().email('invalid email').required('Required'),
-  password: yup
-    .string()
-    .required('Required')
-    .min(6, 'Password is too short, should be 6 chars min'),
-});
-
-const registerSchema = yup.object().shape({
-  schoolId: yup.string().required('Required'),
-  name: yup.string().required('Required'),
-  head: yup.string().required('Required'),
-  place: yup.string().required('Required'),
-  contact: yup
-    .number()
-    .typeError("That doesn't look like a phone number")
-    .positive("A phone number can't start with a minus")
-    .integer("A phone number can't include a decimal point")
-    .min(8)
-    .required('A phone number is required'),
-  email: yup.string().email('invalid email').required('Required'),
-  category: yup.string().required('Required'),
-  password: yup
-    .string()
-    .required('Required')
-    .min(6, 'Password is too short, should be 6 chars min'),
-});
-
-function Form() {
+function Form({ access }) {
   const [pageType, setPageType] = useState('login');
   const [showPassword, setShowPassword] = React.useState(false);
   const isLogin = pageType === 'login';
   const isRegister = pageType === 'register';
-  const serverBaseUrl = useSelector((state) => state.serverBaseUrl.serverBaseUrl);
+  const isSchool = access === 'school';
+  const isStaff = access === 'staff';
+  const isStudent = access === 'student';
+  const isMember = isStaff || isStudent;
   const dispatch = useDispatch();
 
-  const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch(`${serverBaseUrl}/api/school/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
-    });
-
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-
-    if (loggedIn) {
-      delete loggedIn.school.password;
-      dispatch(
-        authActions.setLogin({
-          school: loggedIn.school,
-          token: loggedIn.token,
-        }),
-      );
-      Navigate('/school/home');
-    }
-  };
-
-  const register = async (values, onSubmitProps) => {
-    const registeredResponse = await fetch(`${serverBaseUrl}/api/school/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
-    });
-
-    console.log(registeredResponse);
-    const registered = await registeredResponse.json();
-    onSubmitProps.resetForm();
-
-    console.log(registered);
-  };
-
   const handleFormSubmit = async (values, onSubmitProps) => {
-    if (isLogin) await login(values, onSubmitProps);
-    if (isRegister) await register(values, onSubmitProps);
+    if (isLogin) {
+      const loggedIn = await login(values, onSubmitProps, isSchool, isStaff, isStudent);
+      if (loggedIn) {
+        if (isSchool) {
+          delete loggedIn.school.password;
+          dispatch(
+            schoolActions.setSchoolLogin({
+              school: loggedIn.school,
+              token: loggedIn.token,
+            }),
+          );
+        }
+        if (isStaff) {
+          console.log(loggedIn);
+        }
+        if (isStudent) {
+          console.log(loggedIn);
+        }
+
+        Navigate('/school/home');
+      }
+    }
+    if (isRegister) {
+      const registered = await register(values, onSubmitProps);
+      console.log(registered);
+    }
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -119,6 +76,20 @@ function Form() {
 
   const handleMouseUpPassword = (event) => {
     event.preventDefault();
+  };
+
+  const getInitialValues = () => {
+    if (isSchool) {
+      return isLogin ? initialValuesSchoolLogin : initialValuesRegister;
+    }
+    return initialValuesMemberLogin;
+  };
+
+  const getvalidationSchema = () => {
+    if (isSchool) {
+      return isLogin ? schoolLoginSchema : registerSchema;
+    }
+    return memberLoginSchema;
   };
 
   return (
@@ -139,8 +110,8 @@ function Form() {
       </Typography>
       <Formik
         onSubmit={handleFormSubmit}
-        initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
-        validationSchema={isLogin ? loginSchema : registerSchema}
+        initialValues={getInitialValues()}
+        validationSchema={getvalidationSchema()}
       >
         {({
           values, errors, touched, handleBlur, handleChange, handleSubmit, resetForm,
@@ -242,11 +213,28 @@ function Form() {
                 </TextField>
               </>
               )}
+              { isMember && (
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 autoFocus
+                id="schoolId"
+                label="School ID"
+                name="schoolId"
+                autoComplete="schoolId"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.schoolId}
+                error={Boolean(touched.schoolId) && Boolean(errors.schoolId)}
+                helperText={touched.schoolId && errors.schoolId}
+              />
+              )}
+              <TextField
+                margin="normal"
+                autoFocus={isSchool}
+                required
+                fullWidth
                 id="email"
                 label="Email Address"
                 name="email"
@@ -305,7 +293,7 @@ function Form() {
               </Grid>
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 {isLogin && 'Sign in'}
-                {isRegister && 'Signu up'}
+                {isRegister && 'Sign up'}
               </Button>
               <Grid container justifyContent="center">
                 <Grid item>
@@ -323,7 +311,7 @@ function Form() {
                       resetForm();
                     }}
                   >
-                    { isLogin && 'Don\'t have an account? Sign up'}
+                    { isLogin && isSchool && 'Don\'t have an account? Sign up'}
                     { isRegister && 'Already have an account? Sign in'}
                   </Typography>
                 </Grid>
