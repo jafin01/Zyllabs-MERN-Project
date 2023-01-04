@@ -1,9 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import urlSliceReducer from './serverBaseUrl';
-import authReducer from './authSlice';
+import schoolReducer from './schoolSlice';
+import staffReducer from './staffSlice';
+import studentReducer from './studentSlice';
 
 const store = configureStore({
-  reducer: { serverBaseUrl: urlSliceReducer, authData: authReducer },
+  reducer: {
+    school: schoolReducer,
+    staff: staffReducer,
+    student: studentReducer,
+  },
 });
 
 export default store;
