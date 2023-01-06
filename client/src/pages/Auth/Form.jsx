@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { memberLoginSchema, initialValuesMemberLogin } from '../../schema/memberSchema';
 import {
   schoolLoginSchema,
@@ -27,6 +27,8 @@ import {
 import login from '../../service/login';
 import register from '../../service/register';
 import { schoolActions } from '../../store/schoolSlice';
+import { staffActions } from '../../store/staffSlice';
+import { studentActions } from '../../store/studentSlice';
 
 function Form({ access }) {
   const [pageType, setPageType] = useState('login');
@@ -38,6 +40,7 @@ function Form({ access }) {
   const isStudent = access === 'student';
   const isMember = isStaff || isStudent;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) {
@@ -51,20 +54,35 @@ function Form({ access }) {
               token: loggedIn.token,
             }),
           );
+
+          // navigation
         }
         if (isStaff) {
-          console.log(loggedIn);
+          delete loggedIn.staff.password;
+          dispatch(
+            staffActions.setStaffLogin({
+              staff: loggedIn.staff,
+              token: loggedIn.token,
+            }),
+          );
+
+          navigate('/staff/home');
         }
         if (isStudent) {
-          console.log(loggedIn);
+          delete loggedIn.staff.password;
+          dispatch(
+            studentActions.setStudentLogin({
+              student: loggedIn.student,
+              token: loggedIn.token,
+            }),
+          );
+          // navigation
         }
-
-        Navigate('/school/home');
       }
     }
     if (isRegister) {
-      const registered = await register(values, onSubmitProps);
-      console.log(registered);
+      await register(values, onSubmitProps);
+      Navigate('/school/auth');
     }
   };
 

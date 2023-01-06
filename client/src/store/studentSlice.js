@@ -18,7 +18,7 @@ const studentSlice = createSlice({
         state.mode = state.mode === 'light' ? 'dark' : 'light';
       }
     },
-    setLogin: (state, action) => {
+    setStudentLogin: (state, action) => {
       state.student = action.payload.student;
     },
   },
