@@ -1,4 +1,4 @@
-import baseUrl from '../helpers/baseUrl';
+import baseUrl from '../constants/baseUrl';
 
 const register = async (values, onSubmitProps) => {
   const registeredResponse = await fetch(`${baseUrl}/api/school/signup`, {

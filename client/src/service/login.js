@@ -1,4 +1,4 @@
-import baseUrl from '../helpers/baseUrl';
+import baseUrl from '../constants/baseUrl';
 
 const login = async (values, onSubmitProps, isSchool, isStaff, isStudent) => {
   let loggedInResponse;
