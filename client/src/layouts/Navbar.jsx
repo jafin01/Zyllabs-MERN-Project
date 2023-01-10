@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   FormControl,
   IconButton,
@@ -9,32 +10,28 @@ import {
   // useMediaQuery,
   useTheme,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   DarkMode, ForumRounded, LightMode, Person2Rounded, WorkHistoryRounded,
 } from '@mui/icons-material';
 import FlexBetween from '../components/FlexBetween';
+import { iconVariants, paperVariants } from '../constants/navVariants';
 
-function Navbar() {
-  // const [profileSelected, setProfileSelected] = useState(false);
-  const [feedSelected, setFeedSelected] = useState(false);
-  const [recentSelected, setResentSelected] = useState(false);
+function Navbar({ onClick }) {
   const navigate = useNavigate();
   const PaperMotion = motion(Paper);
   const IconMotion = motion(IconButton);
+  const FlexMotion = motion(FlexBetween);
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
 
   return (
     <PaperMotion
-      transition={{ duration: 0.7, type: 'spring', stiffness: 120 }}
-      initial={{ y: -100, opacity: 0 }}
-      animate={{
-        opacity: 1,
-        y: 12,
-      }}
+      variants={paperVariants}
+      initial="hidden"
+      animate="visible"
       sx={{
         margin: '1.5rem 7%',
         background: '#161b22',
@@ -43,8 +40,8 @@ function Navbar() {
       }}
       elevation={5}
     >
-      <FlexBetween padding="1rem 6%">
-        <FlexBetween gap="1.75rem">
+      <FlexMotion padding="1rem 6%">
+        <FlexMotion gap="1.75rem">
           <Typography
             fontWeight="bold"
             fontSize="clamp(1rem, 2rem, 2.25rem)"
@@ -59,14 +56,19 @@ function Navbar() {
             Zyllabs
 
           </Typography>
-        </FlexBetween>
-        <FlexBetween gap={5} sx={{ alignItems: 'center' }}>
+        </FlexMotion>
+        <FlexMotion gap={5} sx={{ alignItems: 'center' }}>
           <IconMotion
-            onClick={() => {}}
+            variants={iconVariants}
             whileHover={{
               scale: 1.3,
-              color: 'yellow',
             }}
+            sx={{
+              '&:hover': {
+                color: 'yellow',
+              },
+            }}
+            onClick={() => {}}
           >
             {theme.palette.mode === 'dark' ? (
               <DarkMode sx={{ fontSize: '25px' }} />
@@ -78,18 +80,41 @@ function Navbar() {
           <IconMotion
             whileHover={{
               scale: 1.3,
-              color: 'yellow',
             }}
+            sx={{
+              '&:hover': {
+                color: 'yellow',
+              },
+            }}
+            // eslint-disable-next-line react/destructuring-assignment
+            onClick={() => { onClick('profile'); }}
+            variants={iconVariants}
           >
-            <Person2Rounded sx={{
+            <Person2Rounded
+              sx={{
+                fontSize: '25px',
+              }}
+            />
+          </IconMotion>
+
+          <IconMotion
+            whileHover={{
+              scale: 1.3,
+            }}
+            sx={{
+              '&:hover': {
+                color: 'yellow',
+              },
+            }}
+            variants={iconVariants}
+            onClick={() => { onClick('feed'); }}
+          >
+            <ForumRounded sx={{
               color: '#fff',
               fontSize: '25px',
               '&:hover': {
                 color: 'yellow',
               },
-              '&:active': {
-                color: '#00D5FA',
-              },
             }}
             />
           </IconMotion>
@@ -97,29 +122,17 @@ function Navbar() {
           <IconMotion
             whileHover={{
               scale: 1.3,
-              color: 'yellow',
             }}
-            onClick={() => { setFeedSelected(true); }}
-          >
-            <ForumRounded sx={{
-              color: feedSelected ? '#00D5FA' : '#fff',
-              fontSize: '25px',
+            sx={{
               '&:hover': {
                 color: 'yellow',
               },
             }}
-            />
-          </IconMotion>
-
-          <IconMotion
-            whileHover={{
-              scale: 1.3,
-              color: 'yellow',
-            }}
-            onClick={() => { setResentSelected(true); }}
+            variants={iconVariants}
+            onClick={() => { onClick('recent'); }}
           >
             <WorkHistoryRounded sx={{
-              color: recentSelected ? '#00D5FA' : '#fff',
+              color: '#fff',
               fontSize: '25px',
               '&:hover': {
                 color: 'yellow',
@@ -153,8 +166,8 @@ function Navbar() {
             </Select>
           </FormControl>
 
-        </FlexBetween>
-      </FlexBetween>
+        </FlexMotion>
+      </FlexMotion>
 
     </PaperMotion>
   );
