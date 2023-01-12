@@ -1,4 +1,4 @@
-# Zyllabs - School Management System
+# Zyllabs - School Management System (on-going)
 
 ## Table of contents
 
