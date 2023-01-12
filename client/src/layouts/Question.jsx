@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import FlexBetween from '../components/FlexBetween';
-import UserSnippetWidget from './widgets/UserSnippetWidget';
+import UserSnippetWidget from '../components/widgets/UserSnippetWidget';
 
 function Question() {
   const isNonMobile = useMediaQuery('(min-width:900px)');

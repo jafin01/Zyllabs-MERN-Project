@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AuthPage from '../../pages/Auth/LoginPage';
+import SchoolHome from '../../pages/SchoolPages/SchoolHome';
 import { schoolActions } from '../../store/schoolSlice';
 import { themeSettings } from '../../theme';
 
@@ -22,6 +23,7 @@ function schoolRoute() {
         <CssBaseline />
         <Routes>
           <Route path="/school/auth" element={<AuthPage access="school" />} />
+          <Route path="/school/home" element={<SchoolHome />} />
         </Routes>
       </ThemeProvider>
     </BrowserRouter>

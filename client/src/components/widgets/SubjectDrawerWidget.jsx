@@ -3,7 +3,7 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
-import WidgetWrapper from '../../components/WidgetWrapper';
+import WidgetWrapper from '../WidgetWrapper';
 
 function SubjectDrawerWidget() {
   // const isNonMobile = useMediaQuery('(min-width:900px)');

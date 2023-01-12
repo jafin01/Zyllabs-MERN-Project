@@ -19,11 +19,12 @@ import {
 import FlexBetween from '../components/FlexBetween';
 import { iconVariants, paperVariants } from '../constants/navVariants';
 
-function Navbar({ onClick }) {
+const PaperMotion = motion(Paper);
+const IconMotion = motion(IconButton);
+const FlexMotion = motion(FlexBetween);
+
+function Navbar({ pageType, onClick }) {
   const navigate = useNavigate();
-  const PaperMotion = motion(Paper);
-  const IconMotion = motion(IconButton);
-  const FlexMotion = motion(FlexBetween);
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
 
@@ -92,6 +93,7 @@ function Navbar({ onClick }) {
           >
             <Person2Rounded
               sx={{
+                color: pageType === 'profile' ? theme.palette.primary.main : '',
                 fontSize: '25px',
               }}
             />
@@ -110,11 +112,8 @@ function Navbar({ onClick }) {
             onClick={() => { onClick('feed'); }}
           >
             <ForumRounded sx={{
-              color: '#fff',
+              color: pageType === 'feed' ? theme.palette.primary.main : '',
               fontSize: '25px',
-              '&:hover': {
-                color: 'yellow',
-              },
             }}
             />
           </IconMotion>
@@ -132,11 +131,8 @@ function Navbar({ onClick }) {
             onClick={() => { onClick('recent'); }}
           >
             <WorkHistoryRounded sx={{
-              color: '#fff',
+              color: pageType === 'recent' ? theme.palette.primary.main : '',
               fontSize: '25px',
-              '&:hover': {
-                color: 'yellow',
-              },
             }}
             />
           </IconMotion>

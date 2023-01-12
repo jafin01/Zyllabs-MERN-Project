@@ -4,9 +4,9 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import WidgetWrapper from '../../components/WidgetWrapper';
-import Question from '../Question';
-import Answer from '../Answer';
+import WidgetWrapper from '../WidgetWrapper';
+import Question from '../../layouts/Question';
+import Answer from '../../layouts/Answer';
 
 function QnPostWidget() {
   const isNonMobile = useMediaQuery('(min-width:900px)');

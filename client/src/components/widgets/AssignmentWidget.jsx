@@ -1,6 +1,6 @@
 import { Box, Divider, Typography } from '@mui/material';
 import React from 'react';
-import WidgetWrapper from '../../components/WidgetWrapper';
+import WidgetWrapper from '../WidgetWrapper';
 
 function AssignmentWidget() {
   return (

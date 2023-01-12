@@ -5,7 +5,7 @@ import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AuthPage from '../../pages/Auth/LoginPage';
-import StaffHome from '../../pages/Homepage/StaffHome';
+import StaffHome from '../../pages/StaffPages/StaffHome';
 import { staffActions } from '../../store/staffSlice';
 import { themeSettings } from '../../theme';
 

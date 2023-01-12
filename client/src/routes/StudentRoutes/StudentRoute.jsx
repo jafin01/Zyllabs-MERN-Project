@@ -7,7 +7,7 @@ import {
 import { themeSettings } from '../../theme';
 import AuthPage from '../../pages/Auth/LoginPage';
 import { studentActions } from '../../store/studentSlice';
-import StudentHome from '../../pages/Homepage/StudentHome';
+import StudentHome from '../../pages/StudentPages/StudentHome';
 
 function studentRoute() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
