@@ -2,7 +2,7 @@ import { Box, useMediaQuery } from '@mui/material';
 import { motion } from 'framer-motion';
 import React from 'react';
 import FeedLayout from './FeedLayout';
-import SubjectDrawerWidget from './widgets/SubjectDrawerWidget';
+import SubjectDrawerWidget from '../components/widgets/SubjectDrawerWidget';
 
 function Feed() {
   const isNonMobile = useMediaQuery('(min-width:900px)');

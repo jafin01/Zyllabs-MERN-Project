@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from '@mui/material';
 import React from 'react';
-import FlexBetween from '../../components/FlexBetween';
-import WidgetWrapper from '../../components/WidgetWrapper';
+import FlexBetween from '../FlexBetween';
+import WidgetWrapper from '../WidgetWrapper';
 
 function BadgeWidget() {
   const { palette } = useTheme();

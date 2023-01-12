@@ -8,7 +8,7 @@ import Navbar from '../../layouts/Navbar';
 import Profile from '../../layouts/Profile';
 import Recent from '../../layouts/Recent';
 import BottomNavigation from '../../layouts/BottomNavigation';
-import DrawerWidget from '../../layouts/widgets/DrawerWidget';
+import DrawerWidget from '../../components/widgets/DrawerWidget';
 
 function StudentHome() {
   const isNonMobile = useMediaQuery('(min-width:900px)');
@@ -27,7 +27,7 @@ function StudentHome() {
           <DrawerWidget />
         </Box>
       )}
-      { isNonMobile && <Navbar onClick={pageTypeHandler} /> }
+      { isNonMobile && <Navbar pageType={pageType} onClick={pageTypeHandler} /> }
 
       {pageType === 'profile' && <Profile />}
       {pageType === 'feed' && <Feed />}

@@ -1,10 +1,10 @@
 import { useMediaQuery, Box } from '@mui/material';
 import React from 'react';
 import { motion } from 'framer-motion';
-import BadgeWidget from './widgets/BadgeWidget';
-import NoticeBoardWidget from './widgets/NoticeBoardWidget';
-import UserWidget from './widgets/UserWidget';
-import AssignmentWidget from './widgets/AssignmentWidget';
+import BadgeWidget from '../components/widgets/BadgeWidget';
+import NoticeBoardWidget from '../components/widgets/NoticeBoardWidget';
+import UserWidget from '../components/widgets/UserWidget';
+import AssignmentWidget from '../components/widgets/AssignmentWidget';
 
 function Profile() {
   const isNonMobile = useMediaQuery('(min-width:900px)');

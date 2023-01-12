@@ -1,8 +1,8 @@
 import { useTheme } from '@emotion/react';
 import { Button, InputBase, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
-import FlexBetween from '../../components/FlexBetween';
-import WidgetWrapper from '../../components/WidgetWrapper';
+import FlexBetween from '../FlexBetween';
+import WidgetWrapper from '../WidgetWrapper';
 import UserSnippetWidget from './UserSnippetWidget';
 
 function PostWidget() {
