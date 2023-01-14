@@ -57,6 +57,7 @@ The application is built with:
 - React.js
 - Redux and Redux toolkit
 - Material UI
+  - Used advanced MUI datagrid full functioning crud component
 - Framer Motion
 - Formik for form handling and yup for validation
 - ESlint airbnb configurations with some custom rules to maintain code standards
