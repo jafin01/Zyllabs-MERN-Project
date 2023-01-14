@@ -11,25 +11,8 @@ import {
   randomId,
 } from '@mui/x-data-grid-generator';
 
-export const initialRows = [
-  {
-    id: 1, slno: 1, name: 'Jafin Jahfar', admn: 1001, email: 'jafinjahfar@gmail.com', class: 10, div: 'C', dob: '12-12-2000',
-  },
-];
-
-export function EditToolbar(props) {
+function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
-
-  // const handleClick = () => {
-  //   const _id = randomId();
-  //   setRows((oldRows) => [...oldRows, {
-  //     _id, name: '', admnNo: 0, email: '', class: 0, div: '', dob: '01-01-2023', isNew: true,
-  //   }]);
-  //   setRowModesModel((oldModel) => ({
-  //     ...oldModel,
-  //     [_id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-  //   }));
-  // };
 
   const handleClick = () => {
     const _id = randomId();
@@ -58,3 +41,5 @@ EditToolbar.propTypes = {
   setRowModesModel: PropTypes.func.isRequired,
   setRows: PropTypes.func.isRequired,
 };
+
+export default EditToolbar;

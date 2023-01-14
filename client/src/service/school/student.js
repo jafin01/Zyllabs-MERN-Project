@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import baseUrl from '../../constants/baseUrl';
 
 // Get all students
@@ -29,14 +30,18 @@ export const saveNewStudent = async (student) => {
       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWVjYjE1NmY1OGI1ODhjNzA1MWI4NiIsImlhdCI6MTY3MzYwMzUzOSwiZXhwIjoxNjc2MTk1NTM5fQ.CQYvHzQz377s4aZcqub62UGYOfxrNoFecLKxK_fPeHo',
   });
 
-  const response = await fetch(`${baseUrl}/api/school/students/add-student`, {
-    method: 'POST',
-    headers: myHeaders,
-    body: JSON.stringify(student),
-  });
+  try {
+    const response = await fetch(`${baseUrl}/api/school/students/add-student`, {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(student),
+    });
 
-  const newStudent = await response.json();
-  return newStudent;
+    const newStudent = await response.json();
+    return newStudent;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 // Update a student
