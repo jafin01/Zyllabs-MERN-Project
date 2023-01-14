@@ -11,86 +11,38 @@ import {
   randomId,
 } from '@mui/x-data-grid-generator';
 
-// export const initialRows = [
-//   {
-//     id: randomId(),
-//     name: randomTraderName(),
-//     age: 25,
-//     dateCreated: randomCreatedDate(),
-//     lastLogin: randomUpdatedDate(),
-//   },
-//   {
-//     id: randomId(),
-//     name: randomTraderName(),
-//     age: 36,
-//     dateCreated: randomCreatedDate(),
-//     lastLogin: randomUpdatedDate(),
-//   },
-//   {
-//     id: randomId(),
-//     name: randomTraderName(),
-//     age: 19,
-//     dateCreated: randomCreatedDate(),
-//     lastLogin: randomUpdatedDate(),
-//   },
-//   {
-//     id: randomId(),
-//     name: randomTraderName(),
-//     age: 28,
-//     dateCreated: randomCreatedDate(),
-//     lastLogin: randomUpdatedDate(),
-//   },
-//   {
-//     id: randomId(),
-//     name: randomTraderName(),
-//     age: 23,
-//     dateCreated: randomCreatedDate(),
-//     lastLogin: randomUpdatedDate(),
-//   },
-// ];
-
 export const initialRows = [
   {
-    id: 1, lastName: 'Snow', firstName: 'Jon', age: 35,
-  },
-  {
-    id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42,
-  },
-  {
-    id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45,
-  },
-  {
-    id: 4, lastName: 'Stark', firstName: 'Arya', age: 16,
-  },
-  {
-    id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null,
-  },
-  {
-    id: 6, lastName: 'Melisandre', firstName: null, age: 150,
-  },
-  {
-    id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44,
-  },
-  {
-    id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36,
-  },
-  {
-    id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65,
+    id: 1, slno: 1, name: 'Jafin Jahfar', admn: 1001, email: 'jafinjahfar@gmail.com', class: 10, div: 'C', dob: '12-12-2000',
   },
 ];
 
 export function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
 
+  // const handleClick = () => {
+  //   const _id = randomId();
+  //   setRows((oldRows) => [...oldRows, {
+  //     _id, name: '', admnNo: 0, email: '', class: 0, div: '', dob: '01-01-2023', isNew: true,
+  //   }]);
+  //   setRowModesModel((oldModel) => ({
+  //     ...oldModel,
+  //     [_id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+  //   }));
+  // };
+
   const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [...oldRows, {
-      id, firstName: '', lastName: '', age: 0, fullName: '', isNew: true,
-    }]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'firstName' },
-    }));
+    const _id = randomId();
+    const newRow = {
+      _id, name: '', admnNo: 0, email: '', class: 0, div: '', dob: '01-01-2023', isNew: true,
+    };
+    setRows((oldRows) => [...oldRows, newRow]);
+    if (newRow.isNew) {
+      setRowModesModel((oldModel) => ({
+        ...oldModel,
+        [_id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      }));
+    }
   };
 
   return (

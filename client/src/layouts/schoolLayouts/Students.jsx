@@ -1,18 +1,37 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, {
+  useEffect,
+  useState,
+  // useCallback,
+  useMemo,
+  useCallback,
+} from 'react';
 import { DataGrid, GridActionsCellItem, GridRowModes } from '@mui/x-data-grid';
 import { Box } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
-import { EditToolbar, initialRows } from '../../helpers/schoolHelpers/TableHelpers';
+// import { useCallback } from 'react';
+import moment from 'moment';
+import { EditToolbar } from '../../helpers/schoolHelpers/TableHelpers';
+import {
+  getAllStudents, saveNewStudent, deleteStudent, updateStudent,
+} from '../../service/school/student';
 
 function Students() {
-  const [rows, setRows] = React.useState(initialRows);
-  const [rowModesModel, setRowModesModel] = React.useState({});
-  const slno = rows.length;
+  const [rows, setRows] = useState([]);
+  const [rowModesModel, setRowModesModel] = useState({});
+  // const [newRecordAdded, setNewRecordAdded] = useState(false);
+
+  useEffect(() => {
+    const getStudentData = async () => {
+      const students = await getAllStudents();
+      setRows(students);
+    };
+    getStudentData();
+  }, []);
 
   const handleRowEditStart = (params, event) => {
     event.defaultMuiPrevented = true;
@@ -27,11 +46,13 @@ function Students() {
   };
 
   const handleSaveClick = (id) => () => {
+    console.log('hoi');
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
+  const handleDeleteClick = (id) => async () => {
+    await deleteStudent(id);
+    setRows(rows.filter((row) => row._id !== id));
   };
 
   const handleCancelClick = (id) => () => {
@@ -40,52 +61,89 @@ function Students() {
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
 
-    const editedRow = rows.find((row) => row.id === id);
+    const editedRow = rows.find((row) => row._id === id);
     if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
+      setRows(rows.filter((row) => row._id !== id));
     }
   };
 
-  const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
+  const processRowUpdate = async (changedRow) => {
+    const editedRow = rows.find((row) => row._id === changedRow._id);
+    if (editedRow.isNew) {
+      // Make the HTTP request to save the new student in the backend
+      const newStudent = await saveNewStudent(changedRow);
+      setRows(rows.map((row) => {
+        if (row._id === changedRow._id) {
+          return { ...newStudent, _id: newStudent._id, isNew: false };
+        }
+        return row;
+      }));
+      return newStudent;
+    }
+    // Make the HTTP request to update student in the backend
+    const updatedStudent = await updateStudent(changedRow);
+    setRows(rows.map((row) => {
+      if (row._id === changedRow.id) {
+        return { ...updatedStudent, id: updatedStudent._id };
+      }
+      return row;
+    }));
+    return updatedStudent;
   };
+
+  const handleProcessRowUpdateError = useCallback((error) => {
+    console.log(error);
+  }, []);
+
+  const updatedRows = useMemo(
+    () => rows.map((row) => ({ ...row, id: row._id })),
+    [rows],
+  );
 
   const columns = [
     {
-      field: 'id',
+      field: '_id',
       headerName: 'ID',
       width: 70,
       editable: true,
     },
     {
-      field: 'firstName',
-      headerName: 'First name',
-      width: 140,
-      editable: true,
-    },
-    {
-      field: 'lastName',
-      headerName: 'Last name',
-      width: 140,
-      editable: true,
-    },
-    {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      width: 90,
-      editable: true,
-    },
-    {
-      field: 'fullName',
-      headerName: 'Full name',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
+      field: 'name',
+      headerName: 'Name',
       width: 160,
       editable: true,
-      valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    },
+    {
+      field: 'admnNo',
+      headerName: 'Admn No',
+      width: 70,
+      editable: true,
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      width: 180,
+      editable: true,
+    },
+    {
+      field: 'class',
+      headerName: 'Class',
+      width: 70,
+      editable: true,
+    },
+    {
+      field: 'div',
+      headerName: 'Div',
+      width: 70,
+      editable: true,
+    },
+    {
+      field: 'dob',
+      headerName: 'DOB',
+      type: 'date',
+      width: 180,
+      renderCell: (params) => moment(params.row.dob).format('YYYY-MM-DD'),
+      editable: true,
     },
     {
       field: 'actions',
@@ -138,22 +196,24 @@ function Students() {
       <Box sx={{ height: 700, width: '100%' }}>
         <DataGrid
           sx={{ padding: '1rem' }}
-          rows={rows}
+          rows={updatedRows}
           columns={columns}
+          getRowId={(row) => row._id}
           editMode="row"
           rowModesModel={rowModesModel}
           onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
           onRowEditStart={handleRowEditStart}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
+          onProcessRowUpdateError={handleProcessRowUpdateError}
           pageSize={10}
-          rowsPerPageOptions={[5]}
+          rowsPerPageOptions={[10]}
           checkboxSelection
           components={{
             Toolbar: EditToolbar,
           }}
           componentsProps={{
-            toolbar: { slno, setRows, setRowModesModel },
+            toolbar: { setRows, setRowModesModel },
           }}
           experimentalFeatures={{ newEditingApi: true }}
         />
