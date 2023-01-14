@@ -16,12 +16,12 @@ function SchoolHome() {
   };
 
   return (
-    <Box display="flex">
+    <Box display={isNonMobile ? 'flex' : 'block'}>
       <Box>
         {isNonMobile && <Sidebar width="20%" pageType={pageType} onPageChange={changePageType} />}
-        {!isNonMobile && <SidebarDrawer />}
+        {!isNonMobile && <SidebarDrawer pageType={pageType} onPageChange={changePageType} />}
       </Box>
-      <Box margin="5rem 2rem 0 2rem" width="80%">
+      <Box margin={isNonMobile ? '2rem 2rem 0 2rem' : '5rem 1rem 0 0.5rem'} width="95%">
         { pageType === 'performance' && <Performance />}
         { pageType === 'classes' && <Classes />}
         { pageType === 'students' && <Students />}
