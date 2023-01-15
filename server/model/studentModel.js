@@ -47,7 +47,7 @@ const studentSchema = new Schema({
     type : String,
     required : false
   }
-});
+}, { timestamps: true });
 
 const Student = mongoose.model('Student', studentSchema);
 

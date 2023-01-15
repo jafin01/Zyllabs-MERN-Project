@@ -1,10 +1,10 @@
 const Staff = require("../model/staffModel");
 
 // Get details of all staffs
-const getAllStaffs = (schoolName) => {
+const getAllStaffs = (school) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const staffs = await Staff.find({ schoolName });
+      const staffs = await Staff.find({ school });
       resolve(staffs);
     } catch (error) {
       reject(error);
@@ -13,10 +13,10 @@ const getAllStaffs = (schoolName) => {
 };
 
 // Find one staff
-const findStaff = (schoolId, email) => {
+const findStaff = (email) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const staff = Staff.findOne({ schoolId, email });
+      const staff = Staff.findOne({ email });
       resolve(staff);
     } catch (error) {
       reject(error);
@@ -25,11 +25,11 @@ const findStaff = (schoolId, email) => {
 };
 
 // Create staff
-const createStaff = (schoolId, newStaff, hashedPassword) => {
+const createStaff = (school, newStaff, hashedPassword) => {
   return new Promise(async (resolve, reject) => {
     try {
       const createdStaff = await Staff.create({
-        schoolId,
+        school,
         ...newStaff,
         password: hashedPassword,
       });
@@ -41,12 +41,13 @@ const createStaff = (schoolId, newStaff, hashedPassword) => {
 };
 
 // Update staff
-const updateOneStaff = (updatedStaff, id) => {
+const updateOneStaff = (id, updatedStaff) => {
   return new Promise(async (resolve, reject) => {
     try {
       const newStaff = Staff.findByIdAndUpdate(
         { _id: id },
-        { ...updatedStaff }
+        { ...updatedStaff },
+        { new: true }
       );
       resolve(newStaff);
     } catch (error) {
