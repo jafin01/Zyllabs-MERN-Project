@@ -3,6 +3,8 @@ const { signup, login } = require("../controller/schoolController");
 const {
   addStudent,
   deleteStudent,
+  getStudents,
+  updateStudent,
 } = require("../controller/studentController");
 const {
   getStaffs,
@@ -27,8 +29,13 @@ router
   .patch(protectSchool, updateStaff)
   .delete(protectSchool, deleteStaff);
 
+router.get('/students', protectSchool, getStudents);
+
 router.post("/students/add-student", protectSchool, addStudent);
 
-router.delete("/students/:id", protectSchool, deleteStudent);
+router
+  .route('/students/:id')
+  .patch(protectSchool, updateStudent)
+  .delete(protectSchool, deleteStudent);
 
 module.exports = router;

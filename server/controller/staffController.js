@@ -10,17 +10,20 @@ const {
   updateOneStaff,
   deleteOneStaff,
 } = require("../helpers/staffHelpers");
-const { findSchoolBySchoolId } = require("../helpers/schoolHelpers");
+// const { findSchoolBySchoolId } = require("../helpers/schoolHelpers");
 
 // @desc get all staff details
 // @route GET /api/school/staffs
 // @access private
 const getStaffs = asyncHandler(async (req, res) => {
+  const school = req.school._id
+
   try {
-    const staffData = await getAllStaffs();
+    const staffData = await getAllStaffs(school);
     if (!staffData.length) {
       throw new Error("No staffs found");
     }
+
 
     res.status(200).json(staffData);
   } catch (error) {
@@ -33,30 +36,49 @@ const getStaffs = asyncHandler(async (req, res) => {
 // @route /api/school/add-staff
 // @access private
 const addStaff = asyncHandler(async (req, res) => {
-  const newStaff = req.body;
+  const school = req.school;
+  const { name, email, contact, allocatedClasses, subjects, department, joiningDate } =
+    req.body;
 
-  const { name, email, contact, allocatedClasses, subjects, password } =
-    newStaff;
+  const newStaff = {
+    name,
+    email,
+    contact,
+    allocatedClasses,
+    subjects,
+    department,
+    joiningDate,
+  }
 
   // Validating fields
   if (
     !name ||
     !email ||
     !contact ||
-    !allocatedClasses.length ||
-    !subjects.length ||
-    !password
+    !allocatedClasses ||
+    !subjects ||
+    !department
   ) {
-    throw new Error("Please Fill all fields");
+    throw new Error("Looks like some important fields are Empty !!");
+  }
+
+  if(contact.length !== 10) {
+    throw new Error('Contact should be 10 digit Mobile number !!');
   }
 
   // Check if staff exists
   try {
-    const staff = await findStaff(req.school.schoolId, email);
+    const staff = await findStaff(email);
     if (staff) {
-      res.status(403);
-      throw new Error("Staff already exists");
+      res.status(400);
+      throw new Error("Email already in use !! Confirm email with staff before adding !!");
     }
+
+    // Create staff password
+    const joiningDate = new Date(newStaff.joiningDate);
+    const password = newStaff.name.split(" ")[0] + "@" + joiningDate.getFullYear();
+    
+    console.log(password);
 
     // Hash password
     const salt = await bcrypt.genSalt(10);
@@ -64,7 +86,7 @@ const addStaff = asyncHandler(async (req, res) => {
 
     // Create Staff
     const createdStaff = await createStaff(
-      req.school.schoolId,
+      school._id,
       newStaff,
       hashedPassword
     );
@@ -81,17 +103,10 @@ const addStaff = asyncHandler(async (req, res) => {
 // @route PATCH /api/school/staffs/:id
 // @access Private
 const updateStaff = asyncHandler(async (req, res) => {
-  const id = req.params.id;
+  const staff = req.body;
 
-  // Check if ObjectId is invalid
-  if (!ObjectId.isValid(id)) {
-    res.status(400);
-    throw new Error("Invalid ObjectId");
-  }
-
-  // Update staff
   try {
-    const updatedStaff = await updateOneStaff(req.body, id);
+    const updatedStaff = await updateOneStaff(req.params.id, staff);
     res.status(200).json(updatedStaff);
   } catch (error) {
     res.status(400);
@@ -123,17 +138,10 @@ const deleteStaff = asyncHandler(async (req, res) => {
 // @route POST /api/staff/login
 // @access Public
 const staffLogin = asyncHandler(async (req, res) => {
-  const { schoolId, email, password } = req.body;
+  const { email, password } = req.body;
   try {
-    // check if school exists
-    const school = await findSchoolBySchoolId(schoolId);
-    if (!school) {
-      res.status(400);
-      throw new Error("School not found");
-    }
-
     // check for staff email
-    const staff = await findStaff(schoolId, email);
+    const staff = await findStaff(email);
     if (!staff) {
       res.status(400);
       throw new Error("Staff not found");

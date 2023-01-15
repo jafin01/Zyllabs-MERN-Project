@@ -1,3 +1,4 @@
+const { ObjectId } = require("bson");
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
@@ -7,8 +8,8 @@ const staffSchema = new Schema({
     type: String,
     required: true,
   },
-  schoolId: {
-    type: String,
+  school: {
+    type: ObjectId,
     required: true,
   },
   email: {
@@ -26,6 +27,14 @@ const staffSchema = new Schema({
     type: String,
     required: false,
   },
+  department: {
+    type: String,
+    required: true,
+  },
+  joiningDate: {
+    type: Date,
+    required: true,
+  },
   blockStatus: {
     type: Boolean,
     default: false,
@@ -34,7 +43,7 @@ const staffSchema = new Schema({
     type: String,
     required: true,
   },
-});
+}, { timestamps: true });
 
 const Staff = mongoose.model("Staffs", staffSchema);
 

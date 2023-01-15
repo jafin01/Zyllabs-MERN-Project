@@ -1,5 +1,17 @@
 const Student = require("../model/studentModel");
 
+// Get all students in a school
+const getAllStudents = (school) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const students = Student.find({ school }).select(['-password', '-school', '-blockStatus']);
+      resolve(students);
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
 // Find one student by admnNo and school _id
 const findOneStudent = (school, admnNo) => {
   return new Promise(async (resolve, reject) => {
@@ -13,10 +25,10 @@ const findOneStudent = (school, admnNo) => {
 };
 
 // Find student by email and school _id
-const findStudentByEmail = (school, email) => {
+const findStudentByEmail = (email) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const student = await Student.findOne({ school, email });
+      const student = await Student.findOne({ email });
       resolve(student);
     } catch (error) {
       reject(error);
@@ -40,6 +52,22 @@ const createStudent = (school, student, password) => {
   });
 };
 
+// Update a student
+const updateOneStudent = (id, student) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const updatedStudent = await Student.findByIdAndUpdate(
+        { _id: id },
+        { ...student },
+        { new: true }
+      );
+      resolve(updatedStudent);
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
 // Delete a student
 const deleteOneStudent = (id) => {
   return new Promise(async (resolve, reject) => {
@@ -53,8 +81,10 @@ const deleteOneStudent = (id) => {
 }
 
 module.exports = {
+  getAllStudents,
   findOneStudent,
   findStudentByEmail,
   createStudent,
+  updateOneStudent,
   deleteOneStudent,
 };
