@@ -31,11 +31,16 @@ function Staffs() {
     const getStaffsData = async () => {
       try {
         const staffs = await getAllStaffs(token);
-        setRows(staffs.map((staff) => ({
-          ...staff,
-          allocatedClasses: staff.allocatedClasses.join(' | '),
-          subjects: staff.subjects.join(' | '),
-        })));
+        if (staffs.length > 0) {
+          setRows(staffs.map((staff) => ({
+            ...staff,
+            allocatedClasses: staff.allocatedClasses.join(' | '),
+            subjects: staff.subjects.join(' | '),
+          })));
+        }
+        if (staffs.message) {
+          throw new Error(staffs.message);
+        }
         setIsLoading(false);
       } catch (error) {
         handleSnackbar(error.message, 'error');
