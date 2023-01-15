@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
+import { LinearProgress } from '@mui/material';
 import EditToolbar from './EditToolbar';
 
 function DataGridTable({
@@ -21,6 +22,7 @@ function DataGridTable({
 }) {
   const [rowModesModel, setRowModesModel] = useState({});
   const [rows, setRows] = useState([]);
+  console.log(rows);
 
   useEffect(() => {
     setRows(records.map((row) => ({ ...row, id: row._id })));
@@ -143,6 +145,7 @@ function DataGridTable({
         checkboxSelection
         components={{
           Toolbar: EditToolbar,
+          LoadingOverlay: LinearProgress,
         }}
         componentsProps={{
           toolbar: { setRows, setRowModesModel },
