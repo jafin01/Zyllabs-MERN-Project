@@ -20,6 +20,7 @@ const staffSlice = createSlice({
     },
     setStaffLogin: (state, action) => {
       state.staff = action.payload.staff;
+      state.token = action.payload.token;
     },
   },
 });

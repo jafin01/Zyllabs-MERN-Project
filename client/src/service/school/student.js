@@ -2,11 +2,10 @@
 import baseUrl from '../../constants/baseUrl';
 
 // Get all students
-export const getAllStudents = async () => {
+export const getAllStudents = async (token) => {
   const myHeaders = new Headers({
     'Content-Type': 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWVjYjE1NmY1OGI1ODhjNzA1MWI4NiIsImlhdCI6MTY3MzYwMzUzOSwiZXhwIjoxNjc2MTk1NTM5fQ.CQYvHzQz377s4aZcqub62UGYOfxrNoFecLKxK_fPeHo',
+    Authorization: `Bearer ${token}`,
   });
 
   try {
@@ -23,11 +22,10 @@ export const getAllStudents = async () => {
 };
 
 // Create a student
-export const saveNewStudent = async (student) => {
+export const saveNewStudent = async (student, token) => {
   const myHeaders = new Headers({
     'Content-Type': 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWVjYjE1NmY1OGI1ODhjNzA1MWI4NiIsImlhdCI6MTY3MzYwMzUzOSwiZXhwIjoxNjc2MTk1NTM5fQ.CQYvHzQz377s4aZcqub62UGYOfxrNoFecLKxK_fPeHo',
+    Authorization: `Bearer ${token}`,
   });
 
   try {
@@ -45,11 +43,10 @@ export const saveNewStudent = async (student) => {
 };
 
 // Update a student
-export const updateStudent = async (student) => {
+export const updateStudent = async (student, token) => {
   const myHeaders = new Headers({
     'Content-Type': 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWVjYjE1NmY1OGI1ODhjNzA1MWI4NiIsImlhdCI6MTY3MzYwMzUzOSwiZXhwIjoxNjc2MTk1NTM5fQ.CQYvHzQz377s4aZcqub62UGYOfxrNoFecLKxK_fPeHo',
+    Authorization: `Bearer ${token}`,
   });
 
   const response = await fetch(`${baseUrl}/api/school/students/${student.id}`, {
@@ -63,10 +60,9 @@ export const updateStudent = async (student) => {
 };
 
 // Delete a student
-export const deleteStudent = async (id) => {
+export const deleteStudent = async (id, token) => {
   const myHeaders = new Headers({
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWVjYjE1NmY1OGI1ODhjNzA1MWI4NiIsImlhdCI6MTY3MzYwMzUzOSwiZXhwIjoxNjc2MTk1NTM5fQ.CQYvHzQz377s4aZcqub62UGYOfxrNoFecLKxK_fPeHo',
+    Authorization: `Bearer ${token}`,
   });
 
   const response = await fetch(`${baseUrl}/api/school/students/${id}`, {

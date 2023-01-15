@@ -26,6 +26,7 @@
     "react-router-dom": "^6.6.1",
     "react-scripts": "^5.0.1",
     "react-side-bar": "^1.0.4",
+    "redux-persist": "^6.0.0",
     "yup": "^0.32.11"
   },
   "scripts": {

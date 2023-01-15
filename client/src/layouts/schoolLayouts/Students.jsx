@@ -5,6 +5,7 @@ import React, {
   useState,
 } from 'react';
 import { Box } from '@mui/system';
+import { useSelector } from 'react-redux';
 import {
   getAllStudents, saveNewStudent, deleteStudent, updateStudent,
 } from '../../service/school/student';
@@ -18,10 +19,11 @@ function Students() {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const token = useSelector((state) => state.school.token);
 
   useEffect(() => {
     const getStudentData = async () => {
-      const students = await getAllStudents();
+      const students = await getAllStudents(token);
       setRows(students);
       setIsLoading(false);
     };
@@ -35,7 +37,7 @@ function Students() {
   };
 
   const deleteOneStudent = async (id) => {
-    await deleteStudent(id);
+    await deleteStudent(id, token);
     setIsLoading(true);
     handleSnackbar('Student deleted successfully !!', 'warning');
   };
@@ -51,7 +53,7 @@ function Students() {
   // Create a student
   const createNewStudent = async (newRow) => {
     try {
-      const newStudent = await saveNewStudent(newRow);
+      const newStudent = await saveNewStudent(newRow, token);
       if (newStudent.message) {
         throw new Error(newStudent.message);
       }
@@ -70,7 +72,7 @@ function Students() {
 
   const updateExistingStudent = async (changedRow) => {
     try {
-      const updatedStudent = await updateStudent(changedRow);
+      const updatedStudent = await updateStudent(changedRow, token);
       if (updatedStudent.message) {
         throw new Error(updatedStudent.message);
       }
