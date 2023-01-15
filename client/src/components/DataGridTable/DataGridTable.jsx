@@ -22,7 +22,6 @@ function DataGridTable({
 }) {
   const [rowModesModel, setRowModesModel] = useState({});
   const [rows, setRows] = useState([]);
-  console.log(rows);
 
   useEffect(() => {
     setRows(records.map((row) => ({ ...row, id: row._id })));

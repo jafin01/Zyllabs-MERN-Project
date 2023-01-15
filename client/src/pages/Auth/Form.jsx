@@ -38,7 +38,6 @@ function Form({ access }) {
   const isSchool = access === 'school';
   const isStaff = access === 'staff';
   const isStudent = access === 'student';
-  const isMember = isStaff || isStudent;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -55,7 +54,7 @@ function Form({ access }) {
             }),
           );
 
-          // navigation
+          navigate('/school/home');
         }
         if (isStaff) {
           delete loggedIn.staff.password;
@@ -69,14 +68,15 @@ function Form({ access }) {
           navigate('/staff/home');
         }
         if (isStudent) {
-          delete loggedIn.staff.password;
+          delete loggedIn.student.password;
           dispatch(
             studentActions.setStudentLogin({
               student: loggedIn.student,
               token: loggedIn.token,
             }),
           );
-          // navigation
+
+          navigate('/student/home');
         }
       }
     }
@@ -230,23 +230,6 @@ function Form({ access }) {
                   <MenuItem value="ICSE">ICSE</MenuItem>
                 </TextField>
               </>
-              )}
-              { isMember && (
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                autoFocus
-                id="schoolId"
-                label="School ID"
-                name="schoolId"
-                autoComplete="schoolId"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.schoolId}
-                error={Boolean(touched.schoolId) && Boolean(errors.schoolId)}
-                helperText={touched.schoolId && errors.schoolId}
-              />
               )}
               <TextField
                 margin="normal"

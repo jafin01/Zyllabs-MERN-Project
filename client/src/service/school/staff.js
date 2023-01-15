@@ -2,11 +2,10 @@
 import baseUrl from '../../constants/baseUrl';
 
 // Get all students
-export const getAllStaffs = async () => {
+export const getAllStaffs = async (token) => {
   const myHeaders = new Headers({
     'Content-Type': 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWVjYjE1NmY1OGI1ODhjNzA1MWI4NiIsImlhdCI6MTY3MzYwMzUzOSwiZXhwIjoxNjc2MTk1NTM5fQ.CQYvHzQz377s4aZcqub62UGYOfxrNoFecLKxK_fPeHo',
+    Authorization: `Bearer ${token}`,
   });
 
   try {
@@ -23,11 +22,10 @@ export const getAllStaffs = async () => {
 };
 
 // Create a student
-export const saveNewStaff = async (staff) => {
+export const saveNewStaff = async (staff, token) => {
   const myHeaders = new Headers({
     'Content-Type': 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWVjYjE1NmY1OGI1ODhjNzA1MWI4NiIsImlhdCI6MTY3MzYwMzUzOSwiZXhwIjoxNjc2MTk1NTM5fQ.CQYvHzQz377s4aZcqub62UGYOfxrNoFecLKxK_fPeHo',
+    Authorization: `Bearer ${token}`,
   });
 
   try {
@@ -45,11 +43,10 @@ export const saveNewStaff = async (staff) => {
 };
 
 // Update a staff
-export const updateStaff = async (staff) => {
+export const updateStaff = async (staff, token) => {
   const myHeaders = new Headers({
     'Content-Type': 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWVjYjE1NmY1OGI1ODhjNzA1MWI4NiIsImlhdCI6MTY3MzYwMzUzOSwiZXhwIjoxNjc2MTk1NTM5fQ.CQYvHzQz377s4aZcqub62UGYOfxrNoFecLKxK_fPeHo',
+    Authorization: `Bearer ${token}`,
   });
   try {
     const response = await fetch(`${baseUrl}/api/school/staffs/${staff.id}`, {
@@ -66,10 +63,9 @@ export const updateStaff = async (staff) => {
 };
 
 // Delete a staff
-export const deleteStaff = async (id) => {
+export const deleteStaff = async (id, token) => {
   const myHeaders = new Headers({
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWVjYjE1NmY1OGI1ODhjNzA1MWI4NiIsImlhdCI6MTY3MzYwMzUzOSwiZXhwIjoxNjc2MTk1NTM5fQ.CQYvHzQz377s4aZcqub62UGYOfxrNoFecLKxK_fPeHo',
+    Authorization: `Bearer ${token}`,
   });
 
   try {

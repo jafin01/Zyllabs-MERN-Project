@@ -20,6 +20,7 @@ const studentSlice = createSlice({
     },
     setStudentLogin: (state, action) => {
       state.student = action.payload.student;
+      state.token = action.payload.token;
     },
   },
 });

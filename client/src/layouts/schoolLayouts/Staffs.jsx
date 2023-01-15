@@ -5,6 +5,7 @@ import React, {
   useState,
 } from 'react';
 import { Box } from '@mui/system';
+import { useSelector } from 'react-redux';
 import {
   getAllStaffs, saveNewStaff, deleteStaff, updateStaff,
 } from '../../service/school/staff';
@@ -18,6 +19,7 @@ function Staffs() {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const token = useSelector((state) => state.school.token);
 
   const handleSnackbar = (message, severity) => {
     setSnackbarMessage(message);
@@ -28,7 +30,7 @@ function Staffs() {
   useEffect(() => {
     const getStaffsData = async () => {
       try {
-        const staffs = await getAllStaffs();
+        const staffs = await getAllStaffs(token);
         setRows(staffs.map((staff) => ({
           ...staff,
           allocatedClasses: staff.allocatedClasses.join(' | '),
@@ -61,7 +63,7 @@ function Staffs() {
   };
 
   const deleteOneStaff = async (id) => {
-    await deleteStaff(id);
+    await deleteStaff(id, token);
     setIsLoading(true);
     handleSnackbar('Staff deleted successfully !!', 'warning');
   };
@@ -77,10 +79,9 @@ function Staffs() {
   // Create a staff
   const createNewStaff = async (newRow) => {
     const formattedStaff = formatStaffData(newRow);
-    console.log(formattedStaff);
 
     try {
-      const newStaff = await saveNewStaff(formattedStaff);
+      const newStaff = await saveNewStaff(formattedStaff, token);
       if (newStaff.message) {
         throw new Error(newStaff.message);
       }
@@ -100,7 +101,7 @@ function Staffs() {
   const updateExistingStaff = async (changedRow) => {
     const formattedStaff = formatStaffData(changedRow);
     try {
-      const updatedStaff = await updateStaff(formattedStaff);
+      const updatedStaff = await updateStaff(formattedStaff, token);
       if (updatedStaff.message) {
         throw new Error(updatedStaff.message);
       }
