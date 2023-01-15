@@ -39,9 +39,9 @@ function Staffs() {
           })));
         }
         if (staffs.message) {
+          setTimeout(() => setIsLoading(false), 4000);
           throw new Error(staffs.message);
         }
-        setIsLoading(false);
       } catch (error) {
         handleSnackbar(error.message, 'error');
       }
